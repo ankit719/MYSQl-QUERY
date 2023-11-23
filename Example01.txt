@@ -1,0 +1,16 @@
+Delimiter $$
+Create function sf_fact(num int)
+Returns bigint
+DETERMINISTIC
+Begin
+Declare fact bigint ;
+Set fact=1;
+Set i=2;
+while(i<=num)
+do
+Set fact:=fact*num;
+Set i=i+1;
+End while;
+return(concat(num ,' is  a prime number'));
+End;
+$$
