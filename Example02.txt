@@ -1,0 +1,21 @@
+
+--sql query to check given number is prime or not
+Delimiter $$
+Create function sf_checkprime(num int)
+Returns varchar(100)
+DETERMINISTIC
+Begin
+Declare i int;
+Set i=2;
+while(i<=num/2)
+do
+If mod(num,i)=0 then
+return(concat(num ,' is not a prime number'));
+End if;
+Set i=i+1;
+End while;
+return(concat(num ,' is  a prime number'));
+End;
+$$
+
+Delimiter ;
