@@ -1,0 +1,57 @@
+
+--In this procedure at the time of call we pass a string and at current database it search on all table if given string is present then it print the table name and column name
+------------------------------------------------------------------------------------
+Drop procedure sp_srch_string;
+Delimiter $$
+Create procedure sp_srch_string(str varchar(100))
+Begin
+Declare cname varchar(100);
+Declare tname varchar(100);
+Declare flag bit default 0;
+Declare c1 cursor for
+Select table_name,column_name
+From information_schema.columns
+Where (data_type in ('char','varchar') or data_type like 
+'%text%') and table_schema=database();
+Declare continue handler for not found  set flag=1;
+Drop table if exists tab_col_str;
+Create temporary table tab_col_str(tabname varchar(100),colname varchar(100));
+Open c1;
+Myloop:loop
+Fetch c1 into tname,cname;
+If flag=1 then
+Leave myloop;
+Else
+Set @sqlcmd=concat('Select count(*) into @cnt from ' , tname,' where ' , cname, ' like ''%'  , str,'%''');
+Prepare stmt from @sqlcmd;
+Execute stmt;
+If @cnt >0 then
+Insert into tab_col_str values(tname,cname);
+End if;
+End if;
+End loop myloop;
+Close c1;
+Select * from tab_col_str;
+Drop table if exists tab_col_str;
+end;
+$$
+
+Delimiter ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
